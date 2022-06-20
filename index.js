@@ -2,6 +2,10 @@ import puppeteer from "puppeteer";
 import Audic from "audic";
 
 const notificationSound = new Audic("cain.wav");
+notificationSound.loop=false;
+notificationSound.volume=.5;
+notificationSound.duration=11;
+
 const targetURL="https://www.diablotimer.com/";
 
 
@@ -40,11 +44,11 @@ async function checkForUpdates() {
   const m = 1000 * 60; // 1 minute in milliseconds
   const h = 1000 * 60 * 60; // 1 hour in milliseconds
 
-  console.log(`[Debug]: ${hours}h ${minutes}m remaining`);
-  let handleNotifications = setTimeout(async () => {
-    console.log(`[Timeout] ${hours}h,${minutes} remaining`);
-    await notificationSound.play(); // plays sound when new bg starts
+  console.log(`${text.includes("Ends") ? `[Ending in] ${hours}h,${minutes} remaining` : `[Starting in] ${hours}h,${minutes} remaining`}`);
 
+  let handleNotifications = setTimeout(async () => {
+    console.log(`${text.includes("Ends") ? `[Ending in] ${hours}h,${minutes} remaining` : `[Starting in] ${hours}h,${minutes} remaining`}`);
+    if(!notificationSound.playing)await notificationSound.play(); // plays sound when new bg starts
     clearTimeout(handleNotifications); //removes old timeout
     //sets new timeout with
     if (handleNotifications) {
@@ -69,8 +73,8 @@ async function checkForUpdates() {
           timer.trim().length > 3 ? timer.trim().split("h")[0] : "0"
         ); //Hour
 
-        console.log(`[Timeout] ${hours}h,${minutes} remaining`);
-        await notificationSound.play(); // plays sound when new bg starts
+        console.log(`${text.includes("Ends") ? `[Ending in] ${hours}h,${minutes} remaining` : `[Starting in] ${hours}h,${minutes} remaining`}`);
+        if(!notificationSound.playing)await notificationSound.play(); // plays sound when new bg starts
         clearTimeout(handleNotifications);
       }, h * hours + m * minutes);
     }
