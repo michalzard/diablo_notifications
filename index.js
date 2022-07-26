@@ -10,7 +10,7 @@ const targetURL="https://www.diablotimer.com/";
 
 
 async function checkForUpdates() {
-  
+  try{
   const browser = await puppeteer.launch();
 
   const page = await browser.newPage();
@@ -79,6 +79,9 @@ async function checkForUpdates() {
       }, h * hours + m * minutes);
     }
   }, h * hours + m * minutes);
+}catch(err){
+  console.log(err);
+}
 }
 
 checkForUpdates();
